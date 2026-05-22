@@ -12,7 +12,6 @@ In cybersecurity, ensuring data **Integrity** (one of the core pillars of the CI
 This guide demonstrates a hands-on walkthrough using basic hashing tools natively available within Kali Linux.
 
 ---
-
 ## Step 1: Enumerating Hashing Core Options
 
 Before generating signatures, review the built-in syntax flags for the utility using the help flag:
