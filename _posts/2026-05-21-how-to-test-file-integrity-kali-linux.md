@@ -1,6 +1,6 @@
 ---
 title: How to Test File Integrity Using Kali Linux
-date: 2026-05-22 16:30:00 +0100
+date: 2026-05-21 16:30:00 +0100
 categories: [Cybersecurity, Fundamentals]
 tags: [md5sum, integrity, cia, linux, cryptography]
 ---
