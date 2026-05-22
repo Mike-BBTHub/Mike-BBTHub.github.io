@@ -12,14 +12,15 @@ In cybersecurity, ensuring data **Integrity** (one of the core pillars of the CI
 This guide demonstrates a hands-on walkthrough using basic hashing tools natively available within Kali Linux.
 
 ---
+
 ## Step 1: Enumerating Hashing Core Options
 
 Before generating signatures, review the built-in syntax flags for the utility using the help flag:
 
 ```bash
-┌──(kali㉿kali)-[~/Desktop]
-└─$ md5sum --help        
+md5sum --help
 
+Expected Output Reference:
 Usage: md5sum [OPTION]... [FILE]...
 Print or check MD5 (128-bit) checksums.
 
@@ -42,37 +43,29 @@ The following five options are useful only when verifying checksums:
       --version     output version information and exit
 
 Step 2: Staging Test Assets
-We will generate two distinct files on the Desktop containing contrasting text parameters to track how cryptographic signatures change based on content input:
-┌──(kali㉿kali)-[~/Desktop]
-└─$ echo "Information security objectives: CIA" > test1.txt  
-                                                                                                 
-┌──(kali㉿kali)-[~/Desktop]
-└─$ echo "Bad actors objectives: DAD" > test2.txt
+We will generate two distinct files on the Desktop containing contrasting text parameters to track how cryptographic signatures change based on content input. Run these commands sequentially:
+echo "Information security objectives: CIA" > test1.txt
+echo "Bad actors objectives: DAD" > test2.txt
 
 Step 3: Generating the MD5 Hashes
-Run the md5sum utility against the targets to compute their unique 128-bit cryptographic thumbprints. These unique strings verify that the file remains unchanged across different target operating systems.
-┌──(kali㉿kali)-[~/Desktop]
-└─$ md5sum test1.txt
-091452f0f07b1d90cbccbfac6aa01777  test1.txt
-                                                                                                 
-┌──(kali㉿kali)-[~/Desktop]
-└─$ md5sum test2.txt
-a87f414ec798472c5501c8990a91327b  test2.txt
+Run the md5sum utility against a single target to compute its unique 128-bit cryptographic thumbprint:
+md5sum test1.txt
+Output: 091452f0f07b1d90cbccbfac6aa01777  test1.txt
+
+md5sum test2.txt
+Output: a87f414ec798472c5501c8990a91327b  test2.txt
 
 Batch Processing and Exporting Signatures
 To query both positions concurrently, pass them sequentially as terminal arguments:
-┌──(kali㉿kali)-[~/Desktop]
-└─$ md5sum test1.txt test2.txt
-091452f0f07b1d90cbccbfac6aa01777  test1.txt
-a87f414ec798472c5501c8990a91327b  test2.txt
+md5sum test1.txt test2.txt
 
 To create an integrity baseline file to check against later, redirect the output stream into a persistent reference document:
-┌──(kali㉿kali)-[~/Desktop]
-└─$ md5sum test1.txt test2.txt > hashvalues.txt
+md5sum test1.txt test2.txt > hashvalues.txt
 
-# Verify the baseline output contents
-┌──(kali㉿kali)-[~/Desktop]
-└─$ cat hashvalues.txt
+To verify the baseline output file contents, execute:
+cat hashvalues.txt
+
+Output:
 091452f0f07b1d90cbccbfac6aa01777  test1.txt
 a87f414ec798472c5501c8990a91327b  test2.txt
 
@@ -80,18 +73,17 @@ Step 4: Verifying File Integrity Baseline Validation
 To verify data integrity, append the -c (check) flag. This forces the system to automatically calculate the file's current hash and cross-reference it with the baseline entry.
 
 Single String Validation via Here-Strings
-┌──(kali㉿kali)-[~/Desktop]
-└─$ md5sum -c <<< '091452f0f07b1d90cbccbfac6aa01777  test1.txt'
-test1.txt: OK
-                                                                                                 
-┌──(kali㉿kali)-[~/Desktop]
-└─$ md5sum -c <<< 'a87f414ec798472c5501c8990a91327b  test2.txt'
-test2.txt: OK
+md5sum -c <<< '091452f0f07b1d90cbccbfac6aa01777  test1.txt'
+Output: test1.txt: OK
+
+md5sum -c <<< 'a87f414ec798472c5501c8990a91327b  test2.txt'
+Output: test2.txt: OK
 
 Advanced Automated Multi-File Auditing
-When dealing with directory storage arrays, point the verification routine directly at the export manifest to validate everything simultaneously:
-┌──(kali㉿kali)-[~/Desktop]
-└─$ md5sum -c hashvalues.txt                    
+When dealing with larger directory storage arrays, point the verification routine directly at your exported manifest to validate everything simultaneously:
+md5sum -c hashvalues.txt
+
+Output:
 test1.txt: OK
 test2.txt: OK
 The OK confirmation strings guarantee that zero unauthorized byte modifications have occurred within the asset data payloads.
@@ -99,15 +91,13 @@ The OK confirmation strings guarantee that zero unauthorized byte modifications 
 Cryptographic Alternatives & GUI Tools
 1. Alternative CLI Tools
 While MD5 remains fast for checking files for accidental corruption, it suffers from collision vulnerabilities in adversarial spaces. For highly sensitive operations or firmware analysis, leverage modern, collision-resistant alternatives:
-
-SHA-1: sha1sum [file]
-
-SHA-256: sha256sum [file]
+sha1sum test1.txt
+sha256sum test1.txt
 
 2. GUI Verification via HashCalc (Windows Platforms)
 If you are operating out of a Windows workstation and prefer a graphical user interface over the command line, HashCalc provides an excellent solution:
 
-Download the installer package from a trusted repository layout like HashCalc Download Portal.
+Download the installer package from a trusted repository layout like the HashCalc Download Portal.
 
 Drag and drop your target package straight into the calculation grid workspace interface to immediately compute MD5, SHA-1, CRC32, and SHA-256 blocks concurrently.
 
